@@ -107,3 +107,130 @@ class Disclaimer extends StatelessWidget {
         ),
       );
 }
+
+class SimpleMetricCard extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  final String unit;
+  final Color color;
+
+  const SimpleMetricCard({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.unit,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+
+        final bool compact = width < 150;
+
+        final double padding = compact ? 10 : 14;
+        final double iconSize = compact ? 20 : 23;
+        final double valueSize = compact ? 20 : 26;
+
+        return Card(
+          margin: EdgeInsets.zero,
+          clipBehavior: Clip.antiAlias,
+          elevation: 1.5,
+          child: Padding(
+            padding: EdgeInsets.all(padding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Icon + Label
+                Row(
+                  children: [
+                    Container(
+                      width: compact ? 32 : 38,
+                      height: compact ? 32 : 38,
+                      decoration: BoxDecoration(
+                        color: color.withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        icon,
+                        color: color,
+                        size: iconSize,
+                      ),
+                    ),
+
+                    SizedBox(width: compact ? 6 : 9),
+
+                    Expanded(
+                      child: Text(
+                        label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge
+                            ?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: compact ? 11 : 13,
+                            ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const Spacer(),
+
+                // Value + Unit
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: [
+                    Flexible(
+                      child: FittedBox(
+                        alignment: Alignment.centerLeft,
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          value,
+                          maxLines: 1,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                fontSize: valueSize,
+                                fontWeight: FontWeight.w800,
+                              ),
+                        ),
+                      ),
+                    ),
+
+                    if (unit.isNotEmpty) ...[
+                      const SizedBox(width: 4),
+
+                      Flexible(
+                        child: Text(
+                          unit,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                fontSize: compact ? 10 : 11,
+                              ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
